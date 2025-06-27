@@ -1,7 +1,10 @@
 # Import python packages
+from snowflake.snowpark import Session
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
-import requests
+
+# Load credentials from .streamlit/secrets.toml
+connection_parameters = st.secrets["snowflake"]
+session = Session.builder.configs(connection_parameters).create()
 
 # Write directly to the app
 st.title("🥤Customize Your Own Smoothie!🥤")
