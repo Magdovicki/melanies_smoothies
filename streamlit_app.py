@@ -25,6 +25,17 @@ ingredients_list = st.multiselect(
     my_dataframe, max_selections=5
 )
 
+st.title("🍉 Watermelon Nutrition Info")
+
+try:
+    response = requests.get("https://www.fruityvice.com/api/fruit/watermelon")
+    response.raise_for_status()
+    data = response.json()
+    st.json(data)
+except requests.exceptions.RequestException as e:
+    st.error(f"API call failed: {e}")
+
+
 ingredients_string= ''
 
 for fruit_chosen in ingredients_list:
