@@ -1,11 +1,7 @@
 # Import python packages
 import streamlit as st
-from snowflake.snowpark import Session
-from snowflake.snowpark.functions import col, when_matched
-
-# Load credentials from .streamlit/secrets.toml
-connection_parameters = st.secrets["snowflake"]
-session = Session.builder.configs(connection_parameters).create()
+from snowflake.snowpark.context import get_active_session
+import requests
 
 # Write directly to the app
 st.title("🥤Customize Your Own Smoothie!🥤")
@@ -29,17 +25,6 @@ ingredients_list = st.multiselect(
     my_dataframe, max_selections=5
 )
 
-st.title("🍉 Watermelon Nutrition Info")
-
-try:
-    response = requests.get("https://www.fruityvice.com/api/fruit/watermelon")
-    response.raise_for_status()
-    data = response.json()
-    st.json(data)
-except requests.exceptions.RequestException as e:
-    st.error(f"API call failed: {e}")
-
-
 ingredients_string= ''
 
 for fruit_chosen in ingredients_list:
@@ -60,3 +45,12 @@ if time_to_insert:
     st.success('Your Smoothie is ordered!'+', '+ name_on_order, icon="✅"
               )
 
+st.title("🍉 Watermelon Nutrition Info")
+
+try:
+    response = requests.get("https://www.fruityvice.com/api/fruit/watermelon")
+    response.raise_for_status()
+    data = response.json()
+    st.json(data)
+except requests.exceptions.RequestException as e:
+    st.error(f"API call failed: {e}")
